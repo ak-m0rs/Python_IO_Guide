@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python I/O Mastery — Assessment Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e28;
+    --border: #252a38;
+    --accent: #f0c44a;
+    --accent2: #4af0a4;
+    --danger: #f05a4a;
+    --muted: #5a6072;
+    --text: #d8dce8;
+    --text-dim: #8890a4;
+    --code-bg: #0a0c10;
+    --good: #1a2e22;
+    --good-border: #2a5a3a;
+    --bad: #2e1a1a;
+    --bad-border: #5a2a2a;
+    --note: #1e1e0a;
+    --note-border: #5a5a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,196,74,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    max-width: 720px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 16px;
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 600px;
+  }
+  .hero-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 24px;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  /* NAV */
+  .toc {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .toc a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .toc a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* LAYOUT */
+  .container { max-width: 960px; margin: 0 auto; padding: 48px 40px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(240,196,74,0.1);
+    border: 1px solid rgba(240,196,74,0.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  /* CONCEPT CARD */
+  .concept {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .concept-head {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .concept-head h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+  .concept-head .icon { font-size: 16px; }
+  .concept-body { padding: 20px; }
+
+  /* COMPARE GRID */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+
+  .good-block, .bad-block {
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+  .good-block { background: var(--good); border: 1px solid var(--good-border); }
+  .bad-block  { background: var(--bad);  border: 1px solid var(--bad-border);  }
+
+  .block-label {
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .good-block .block-label { background: rgba(74,240,164,0.1); color: var(--accent2); }
+  .bad-block  .block-label { background: rgba(240,90,74,0.1);  color: var(--danger);  }
+
+  pre {
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    padding: 14px 16px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .good-block pre { color: #b0f0d0; }
+  .bad-block  pre { color: #f0b0b0; }
+
+  code {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* EFFECT BOX */
+  .effect {
+    background: var(--note);
+    border: 1px solid var(--note-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #c8c87a;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .effect::before { content: '⚡'; flex-shrink: 0; margin-top: 1px; }
+
+  /* INFO BOX */
+  .info {
+    background: rgba(240,196,74,0.05);
+    border: 1px solid rgba(240,196,74,0.2);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+  .info strong { color: var(--accent); }
+
+  /* SINGLE CODE BLOCK */
+  .codeblock {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .codeblock-head {
+    padding: 7px 14px;
+    background: var(--surface2);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+  .codeblock pre { color: #c8d0e8; }
+
+  /* DRY RUN */
+  .dryrun {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .dryrun-head {
+    padding: 8px 16px;
+    background: rgba(74,240,164,0.07);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dryrun table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+  .dryrun td, .dryrun th {
+    padding: 8px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .dryrun th {
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: 400;
+  }
+  .dryrun td:first-child { color: var(--accent); }
+  .dryrun td.ok  { color: var(--accent2); }
+  .dryrun td.err { color: var(--danger);  }
+
+  /* TRAP LIST */
+  .trap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .trap-card {
+    background: var(--bad);
+    border: 1px solid var(--bad-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .trap-card .trap-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--danger);
+    margin-bottom: 6px;
+  }
+  .trap-card h4 { font-size: 13px; color: #fff; margin-bottom: 4px; font-weight: 700; }
+  .trap-card p { font-size: 12px; color: #c09090; line-height: 1.5; }
+  .trap-card code { background: rgba(240,90,74,0.15); color: var(--danger); }
+
+  /* CHEATSHEET */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+  .cheat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .cheat-card-head {
+    padding: 8px 14px;
+    background: rgba(240,196,74,0.08);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+  }
+  .cheat-card pre { font-size: 12px; color: #b8d0f0; }
+
+  /* PRACTICE */
+  .practice {
+    background: rgba(74,240,164,0.04);
+    border: 1px solid var(--good-border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .practice-head {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .practice pre {
+    background: var(--code-bg);
+    border-radius: 6px;
+    color: #a8d8c0;
+    font-size: 12px;
+  }
+
+  /* RULE DIVIDER */
+  .rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* INLINE LABEL */
+  .label {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .label-ok  { background: rgba(74,240,164,0.12); color: var(--accent2); }
+  .label-err { background: rgba(240,90,74,0.12);  color: var(--danger);  }
+  .label-warn{ background: rgba(240,196,74,0.12); color: var(--accent);  }
+
+  /* LAST 5 MIN */
+  .last5 {
+    background: linear-gradient(135deg, #1a1400 0%, #0d1a14 100%);
+    border: 1px solid rgba(240,196,74,0.3);
+    border-radius: 10px;
+    padding: 28px;
+  }
+  .last5 h3 {
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    font-family: 'Space Mono', monospace;
+  }
+  .last5-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+  }
+  .last5-item .n {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-size: 11px;
+    padding-top: 2px;
+    flex-shrink: 0;
+    width: 20px;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px 40px;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  p { margin-bottom: 10px; color: var(--text-dim); }
+  ul { padding-left: 20px; color: var(--text-dim); }
+  li { margin-bottom: 4px; font-size: 13.5px; }
+  strong { color: var(--text); }
+
+  .spacer { height: 16px; }
+
+  /* scroll anchor offset */
+  [id] { scroll-margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Assessment Survival Guide · Python I/O</div>
+  <h1>Input, Output &amp; Driver Code<br><span>Mastery Playbook</span></h1>
+  <p class="hero-sub">Built for intermediate developers who solve problems fine but lose marks on I/O. Every pattern. Every trap. Real comparisons.</p>
+  <div class="hero-pills">
+    <span class="pill">Input Patterns</span>
+    <span class="pill">Driver Code</span>
+    <span class="pill">Output Formatting</span>
+    <span class="pill">Edge Cases</span>
+    <span class="pill">Built-ins</span>
+    <span class="pill">Dry Runs</span>
+    <span class="pill">Cheat Sheet</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <a href="#s1">01 · Basic I/O</a>
+  <a href="#s2">02 · Input Patterns</a>
+  <a href="#s3">03 · Fast Input</a>
+  <a href="#s4">04 · Driver Code</a>
+  <a href="#s5">05 · Output Formatting</a>
+  <a href="#s6">06 · Built-ins</a>
+  <a href="#s7">07 · Edge Cases</a>
+  <a href="#s8">08 · Assessment Traps</a>
+  <a href="#s9">09 · Dry Runs</a>
+  <a href="#s10">10 · Cheat Sheet</a>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 — BASIC I/O
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Basic Input &amp; Output — The Foundation</h2>
+  </div>
+
+  <div class="info">
+    <strong>What input() actually does:</strong> It reads one line from the keyboard (or stdin in assessments), waits for Enter, and always returns a <strong>string</strong>. That's it. Everything else — splitting, converting — is your job.
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📥</span><h3>Single value input</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT</div>
+          <pre>n = int(input())
+# input "5" → n is integer 5</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG</div>
+          <pre>n = input()
+# n is string "5" — math breaks!
+# n + 1 → TypeError</pre>
+        </div>
+      </div>
+      <div class="effect">If you skip int(), string "5" + 1 crashes. "5" > "10" is True (lexicographic!) — silent wrong answers.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📥</span><h3>Multiple values on one line</h3></div>
+    <div class="concept-body">
+      <div class="info">Input: <code>3 7</code></div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT</div>
+          <pre>a, b = map(int, input().split())
+# a = 3, b = 7  (integers)</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG</div>
+          <pre>a, b = input().split()
+# a = "3", b = "7"  (strings!)
+# or:
+a = int(input().split()) # crash
+# split() returns a list, not int</pre>
+        </div>
+      </div>
+      <div class="effect">map(int, ...) applies int() to every element of split(). Missing this = string math = silent WA.</div>
+
+      <div class="practice">
+        <div class="practice-head">▶ MINI PRACTICE</div>
+        <pre>Input:  10 20 30
+Task:   Print their sum
+Answer: print(sum(map(int, input().split())))
+Output: 60</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📤</span><h3>Output basics — print()</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ What you want</div>
+          <pre>print(42)        # 42\n
+print("yes")     # yes\n
+print(a, b)      # 3 7  (space auto-added)
+print(a, b, sep=",")  # 3,7
+print(a, end="") # no newline after</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Common mistakes</div>
+          <pre>print([1,2,3])   # [1, 2, 3]  ← brackets!
+print((1,2))     # (1, 2)     ← parens!
+print(1,2,3,sep="") # 123  (no spaces)
+# vs expected "1 2 3" → WA</pre>
+        </div>
+      </div>
+      <div class="effect">print() adds a newline by default, adds a space between multiple args. Both can cause WA if expected format differs.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 — INPUT PATTERNS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>All Input Patterns — Complete Reference</h2>
+  </div>
+
+  <!-- 2A: ARRAY -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📋</span><h3>Array / list on one line</h3></div>
+    <div class="concept-body">
+      <div class="info">Input: <code>1 2 3 4 5</code></div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT</div>
+          <pre>arr = list(map(int, input().split()))
+# arr = [1, 2, 3, 4, 5]  — integers</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG</div>
+          <pre>arr = input().split()
+# arr = ['1','2','3','4','5']
+# arr[0] + arr[1] = "12"  NOT 3 !</pre>
+        </div>
+      </div>
+      <div class="effect">String list: sum(arr) crashes. Sorting "10" < "9" → wrong order. Always convert unless you explicitly need strings.</div>
+    </div>
+  </div>
+
+  <!-- 2B: MATRIX -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔲</span><h3>Matrix / 2D grid input</h3></div>
+    <div class="concept-body">
+      <div class="info">Input: <code>3</code> (n=3, then 3 rows)</div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT</div>
+          <pre>n = int(input())
+mat = [list(map(int, input().split()))
+       for _ in range(n)]
+# mat[0][0] is top-left integer</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG</div>
+          <pre>mat = list(map(int, input().split()))
+# reads ONLY first row as flat list!
+# mat[row][col] → crash (1D, not 2D)
+
+mat = [input().split() for _ in range(n)]
+# 2D but strings — math fails!</pre>
+        </div>
+      </div>
+      <div class="effect">Flat list instead of 2D: mat[1][2] crashes with IndexError. String elements: comparisons and math silently wrong.</div>
+
+      <div class="practice">
+        <div class="practice-head">▶ MINI PRACTICE — Print diagonal sum</div>
+        <pre>Input:
+3
+1 2 3
+4 5 6
+7 8 9
+
+Code:
+n = int(input())
+mat = [list(map(int, input().split())) for _ in range(n)]
+print(sum(mat[i][i] for i in range(n)))
+
+Output: 15</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2C: MULTIPLE TEST CASES -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔁</span><h3>Multiple test cases (the most critical pattern)</h3></div>
+    <div class="concept-body">
+      <div class="info"><strong>Most assessment problems use this.</strong> The first line is <code>t</code> (number of test cases). Everything else is per-test data.</div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT — always wrap in loop</div>
+          <pre>t = int(input())
+for _ in range(t):
+    n = int(input())
+    arr = list(map(int, input().split()))
+    print(sum(arr))</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — no loop</div>
+          <pre>t = int(input())  # reads 3 → ignored
+n = int(input())  # reads first test's n
+arr = list(map(int, input().split()))
+# only runs ONCE, misses 2 test cases → WA</pre>
+        </div>
+      </div>
+      <div class="effect">Without the loop: only 1 test case runs. If you process t=3 problems but only output 1 answer, judge marks it Wrong Answer immediately.</div>
+
+      <div class="dryrun">
+        <div class="dryrun-head">DRY RUN — 3 test cases</div>
+        <table>
+          <tr><th>Line read</th><th>Variable</th><th>Value</th><th>Status</th></tr>
+          <tr><td>input()</td><td>t</td><td>3</td><td class="ok">ok</td></tr>
+          <tr><td>loop iter 1: input()</td><td>n</td><td>3</td><td class="ok">ok</td></tr>
+          <tr><td>input().split()</td><td>arr</td><td>[1,2,3]</td><td class="ok">ok</td></tr>
+          <tr><td>print</td><td>—</td><td>6</td><td class="ok">ok</td></tr>
+          <tr><td>loop iter 2: input()</td><td>n</td><td>2</td><td class="ok">ok</td></tr>
+          <tr><td>input().split()</td><td>arr</td><td>[4,5]</td><td class="ok">ok</td></tr>
+          <tr><td>print</td><td>—</td><td>9</td><td class="ok">ok</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2D: STRINGS -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">💬</span><h3>Strings — with and without spaces</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Full line string</div>
+          <pre>s = input()
+# "hello world" → s = "hello world"
+# Preserves spaces. Use this for sentences.</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Splits the sentence!</div>
+          <pre>s = input().split()
+# "hello world" → ['hello', 'world']
+# s is now a LIST, not a string!
+# s[0] = "hello", s[1] = "world"</pre>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Multiple words separately</div>
+          <pre>w1, w2 = input().split()
+# "hello world" → w1="hello", w2="world"</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Wrong split character</div>
+          <pre>parts = input().split(" ")
+# "hello  world" (2 spaces!) → ['hello','','world']
+# Extra empty string in list → index errors</pre>
+        </div>
+      </div>
+      <div class="effect"><code>split()</code> (no args) handles any whitespace including multiple spaces. <code>split(" ")</code> is literal — one space only. Always use <code>split()</code> unless you need CSV-style.</div>
+    </div>
+  </div>
+
+  <!-- 2E: MIXED TYPES -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔀</span><h3>Mixed data types on one line</h3></div>
+    <div class="concept-body">
+      <div class="info">Input: <code>5 hello</code> — an int and a string together</div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT</div>
+          <pre>line = input().split()
+n = int(line[0])      # "5" → 5
+s = line[1]           # "hello" stays string
+
+# OR: unpack first
+a, b = input().split()
+a = int(a)</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — map(int, ...) on mixed</div>
+          <pre>a, b = map(int, input().split())
+# int("hello") → ValueError: crash!
+# map(int,...) tries to convert ALL parts</pre>
+        </div>
+      </div>
+      <div class="effect">map(int, ...) applies int() to every token. One non-numeric token → crash. Split manually and convert only the int parts.</div>
+    </div>
+  </div>
+
+  <!-- 2F: UNKNOWN COUNT -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">♾️</span><h3>Unknown number of inputs / EOF handling</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Read all at once (best for EOF)</div>
+          <pre>import sys
+data = sys.stdin.read().split()
+# Reads EVERYTHING at once into a list
+# index pointer pattern:
+idx = 0
+t = int(data[idx]); idx += 1
+for _ in range(t):
+    n = int(data[idx]); idx += 1
+    arr = list(map(int, data[idx:idx+n]))
+    idx += n</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Risky with unknown lines</div>
+          <pre>while True:
+    line = input()   # raises EOFError at end!
+    # Need try/except around this:
+try:
+    while True:
+        line = input()
+except EOFError:
+    pass
+# Works but fragile vs sys.stdin.read()</pre>
+        </div>
+      </div>
+      <div class="effect"><code>sys.stdin.read()</code> is safest for EOF problems. <code>input()</code> in a while loop without try/except crashes when input ends.</div>
+    </div>
+  </div>
+
+  <!-- 2G: MULTI-LINE STRUCTURED -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📑</span><h3>Multi-line structured input</h3></div>
+    <div class="concept-body">
+      <div class="info">Input: n on first line, then n separate lines each with one value</div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT — read n times</div>
+          <pre>n = int(input())
+arr = []
+for _ in range(n):
+    arr.append(int(input()))
+# Each int on its own line → appended</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — one split()</div>
+          <pre>n = int(input())
+arr = list(map(int, input().split()))
+# Only reads LINE 2, ignores lines 3..n
+# arr has 1 element, not n → crash later</pre>
+        </div>
+      </div>
+      <div class="effect">One input() reads one line only. If data spans n lines, you must call input() n times (or use sys.stdin.read()).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 — FAST INPUT
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Fast Input — Avoiding TLE on Large Data</h2>
+  </div>
+
+  <div class="info">
+    <strong>When does this matter?</strong> When n ≥ 10⁵ and you're reading a lot of lines. Regular <code>input()</code> is slow on large stdin. The judge may give TLE even if your algorithm is correct.
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">⚡</span><h3>sys.stdin.readline — the correct way</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Fast input setup</div>
+          <pre>import sys
+input = sys.stdin.readline
+
+# Now use input() exactly as before:
+n = int(input())
+arr = list(map(int, input().split()))</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ The silent trap — missing .strip()</div>
+          <pre>import sys
+input = sys.stdin.readline
+
+s = input()
+if s == "abc":   # FAILS!
+# readline keeps "\n" at end
+# s is actually "abc\n"
+# "abc\n" == "abc" → False → wrong branch</pre>
+        </div>
+      </div>
+      <div class="effect">Always add <code>.strip()</code> when reading strings with fast input. Integer/float conversion via int() or float() handles the newline automatically, but bare string comparison does not.</div>
+
+      <div class="codeblock">
+        <div class="codeblock-head">SAFE FAST INPUT TEMPLATE</div>
+        <pre>import sys
+input = sys.stdin.readline
+
+def solve():
+    n = int(input())           # .strip() not needed for int()
+    s = input().strip()        # ALWAYS strip when using as string
+    arr = list(map(int, input().split()))  # .split() strips newline
+    return s, arr</pre>
+      </div>
+
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Fastest: read all at once</div>
+          <pre>import sys
+data = sys.stdin.buffer.read().split()
+# Returns bytes, but split() still works
+# Fastest possible stdin read</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ When to use which</div>
+          <pre># n < 10^4: regular input() fine
+# 10^4 ≤ n ≤ 10^6: use sys.stdin.readline
+# n > 10^6 or EOF: use sys.stdin.read()</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 — DRIVER CODE
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>Driver Code Mastery — How Assessments Actually Work</h2>
+  </div>
+
+  <div class="info">
+    <strong>What is driver code?</strong> In many platforms (HackerRank, etc.), the platform writes the input/output code for you. It calls your function with specific arguments and expects a specific return value. You only write the function body. Breaking the signature = instant WA.
+  </div>
+
+  <!-- FUNCTION RETURN -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔧</span><h3>Format 1 — Function must RETURN (driver prints)</h3></div>
+    <div class="concept-body">
+      <div class="info">The driver code already has <code>print(solve(...))</code>. Your job: <strong>return</strong> the answer. Never print inside.</div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT — return only</div>
+          <pre>def solve(arr):
+    return sum(arr)
+
+# Driver (hidden, written by platform):
+# result = solve(arr)
+# print(result)     ← driver prints</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — print inside + return</div>
+          <pre>def solve(arr):
+    print(sum(arr))   # prints "15"
+    return sum(arr)   # driver then prints "15" again
+
+# Output:
+# 15
+# 15    ← double output → WA</pre>
+        </div>
+      </div>
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ ALSO WRONG — print but return None</div>
+          <pre>def solve(arr):
+    print(sum(arr))  # prints "15"
+    # no return statement → returns None
+
+# Output:
+# 15
+# None     ← driver prints None → WA</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Returning list correctly</div>
+          <pre>def solve(arr):
+    return sorted(arr)
+# Driver handles how to print it
+# Don't print [1,2,3] yourself</pre>
+        </div>
+      </div>
+      <div class="effect">Every extra print() inside a return-style function adds an extra line to output. Judge sees wrong number of lines → WA immediately.</div>
+    </div>
+  </div>
+
+  <!-- PRINT STYLE -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🖨️</span><h3>Format 2 — You must PRINT (no return expected)</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT — print inside</div>
+          <pre>def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    print(sum(arr))   # ← you handle output
+
+# You call it yourself:
+solve()</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — return instead of print</div>
+          <pre>def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    return sum(arr)   # returned to nobody
+
+solve()   # return value ignored, nothing printed → WA</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLASS BASED -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🏛️</span><h3>Format 3 — Class-based (HackerRank style)</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">TYPICAL PLATFORM PATTERN</div>
+        <pre>class Solution:
+    def twoSum(self, nums: list, target: int) -> list:
+        # Your code only — platform handles I/O
+        seen = {}
+        for i, v in enumerate(nums):
+            if target - v in seen:
+                return [seen[target-v], i]
+            seen[v] = i</pre>
+      </div>
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — changed signature</div>
+          <pre>class Solution:
+    def twoSum(self, arr, t):  # renamed params
+        # ...
+
+# Platform calls: sol.twoSum(nums, target)
+# Python is flexible but type hints help
+# Renaming is fine — CHANGING COUNT is not:
+
+    def twoSum(self, nums):  # removed target!
+        # platform passes 2 args → TypeError → crash</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — printing instead of returning</div>
+          <pre>class Solution:
+    def twoSum(self, nums, target):
+        # ...
+        print([i, j])   # platform ignores print
+        # platform expects return value → gets None → WA</pre>
+        </div>
+      </div>
+      <div class="effect">In class-based problems: never change the method signature (parameter count), never print — always return. Platform code calls your method and handles the output.</div>
+    </div>
+  </div>
+
+  <!-- COMPETITIVE STYLE -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">⚔️</span><h3>Format 4 — Competitive / write-everything style</h3></div>
+    <div class="concept-body">
+      <div class="info">You write everything: read input, solve, print output. Most common in Codeforces-style contests.</div>
+      <div class="codeblock">
+        <div class="codeblock-head">STANDARD COMPETITIVE TEMPLATE</div>
+        <pre>import sys
+input = sys.stdin.readline
+
+def solve():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    # ... your logic ...
+    print(*sorted(arr))   # you handle output format
+
+t = int(input())
+for _ in range(t):
+    solve()</pre>
+      </div>
+      <div class="effect">Key: variable scope. Any variables inside solve() reset each test case. If you need state across cases, use global or pass as argument.</div>
+    </div>
+  </div>
+
+  <!-- VARIABLE RESET -->
+  <div class="concept">
+    <div class="concept-head"><span class="icon">♻️</span><h3>Variable reset between test cases — the silent killer</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ WRONG — variable leaks between cases</div>
+          <pre>count = 0           # outside loop!
+t = int(input())
+for _ in range(t):
+    n = int(input())
+    arr = list(map(int, input().split()))
+    for x in arr:
+        if x > 0: count += 1
+    print(count)
+# Test 1: count=3 → prints 3 ✓
+# Test 2: count=3+2=5 → prints 5 ✗ (should be 2)</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ CORRECT — reset inside loop</div>
+          <pre>t = int(input())
+for _ in range(t):
+    count = 0           # reset each case!
+    n = int(input())
+    arr = list(map(int, input().split()))
+    for x in arr:
+        if x > 0: count += 1
+    print(count)
+# Test 1: count=3 → 3 ✓
+# Test 2: count=2 → 2 ✓</pre>
+        </div>
+      </div>
+      <div class="effect">Variables accumulate silently across iterations. Test case 1 passes, test case 2 onwards fails. Hard to catch without dry-running.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 — OUTPUT FORMATTING
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Output Formatting — Most Common WA Source</h2>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📤</span><h3>Printing a list — the #1 formatting mistake</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Space-separated (most common)</div>
+          <pre>arr = [1, 2, 3]
+print(*arr)
+# Output: 1 2 3</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Prints Python list repr</div>
+          <pre>arr = [1, 2, 3]
+print(arr)
+# Output: [1, 2, 3]
+# Judge expects: 1 2 3 → WA</pre>
+        </div>
+      </div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Each element on own line</div>
+          <pre>for x in arr:
+    print(x)
+# Output:
+# 1
+# 2
+# 3</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Custom separator</div>
+          <pre>print(*arr, sep=",")
+# Output: 1,2,3
+
+print(*arr, sep="\n")
+# Same as for loop version</pre>
+        </div>
+      </div>
+      <div class="effect"><code>print(*arr)</code> unpacks the list. <code>print(arr)</code> prints its string representation with brackets. One wrong character = WA on strict judges.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔤</span><h3>String joining — when you need no spaces</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ No-space join</div>
+          <pre>arr = ['a', 'b', 'c']
+print("".join(arr))
+# Output: abc
+
+# For integer list:
+print("".join(map(str, [1,2,3])))
+# Output: 123</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ join on integers crashes</div>
+          <pre>arr = [1, 2, 3]
+print("".join(arr))
+# TypeError: sequence item 0: expected str
+# Must convert to str first!</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">↩️</span><h3>Newline and trailing space control</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">ALL print() CONTROL OPTIONS</div>
+        <pre>print("hi")              # "hi\n"   — adds newline (default)
+print("hi", end="")      # "hi"     — no newline
+print("hi", end=" ")     # "hi "    — space instead of newline
+print("a", "b")          # "a b"    — space between args (default sep=" ")
+print("a", "b", sep="")  # "ab"     — no separator
+print("a", "b", sep="-") # "a-b"    — custom separator
+print()                  # "\n"     — blank line</pre>
+      </div>
+      <div class="effect">If expected output has no trailing newline and you add one, some strict judges fail. Use <code>end=""</code> on the last print to suppress.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎯</span><h3>Formatted numbers — float precision</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Fixed decimal places</div>
+          <pre>x = 3.14159
+print(f"{x:.2f}")   # 3.14
+print(round(x, 2))  # 3.14
+print("{:.4f}".format(x))  # 3.1416</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Precision mismatch</div>
+          <pre>print(1/3)
+# 0.3333333333333333
+# Expected: 0.33 → WA
+
+print(int(3.7))
+# 3  (truncates, doesn't round!)
+# Expected: 4 → WA  (use round())</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6 — BUILT-IN FUNCTIONS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Essential Built-in Functions — Quick Reference</h2>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔨</span><h3>map() — apply function to iterable</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">HOW map() WORKS</div>
+        <pre># map(function, iterable) → lazy iterator
+# MUST wrap in list() to get actual list
+
+nums = list(map(int, "1 2 3".split()))  # [1, 2, 3]
+nums = list(map(float, "1.1 2.2".split()))  # [1.1, 2.2]
+strs = list(map(str, [1, 2, 3]))        # ['1', '2', '3']
+
+# map() is lazy — doesn't execute until consumed:
+m = map(int, ["1","2"])   # nothing converted yet
+first = next(m)            # NOW converts "1" → 1
+rest = list(m)             # converts "2" → [2]</pre>
+      </div>
+      <div class="compare">
+        <div class="good-block">
+          <div class="block-label">✓ Correct usage</div>
+          <pre>a, b, c = map(int, input().split())
+# Perfectly unpacks 3 integers from one line</pre>
+        </div>
+        <div class="bad-block">
+          <div class="block-label">✗ Forgetting list()</div>
+          <pre>arr = map(int, input().split())
+print(arr)  # <map object at 0x...>
+# Not a list! Can't index arr[0]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">✂️</span><h3>split() — anatomy and traps</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">SPLIT() COMPARISON TABLE</div>
+        <pre>s = "  hello   world  "
+
+s.split()       # ['hello', 'world']    ← strips AND splits on ANY whitespace
+s.split(" ")    # ['', '', 'hello', '', '', 'world', '', '']  ← literal space only!
+s.split(",")    # ['  hello   world  '] ← no comma found, full string in list
+
+# CSV input — correct way:
+"a,b,c".split(",")   # ['a', 'b', 'c']
+
+# Limit splits:
+"a b c d".split(None, 2)  # ['a', 'b', 'c d']  — splits max 2 times</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔧</span><h3>Type conversion quick reference</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">CONVERSIONS THAT WORK vs CRASH</div>
+        <pre># SAFE CONVERSIONS:
+int("42")         # 42        ✓
+int("42\n")       # 42        ✓  (handles trailing newline)
+int("  42  ")     # 42        ✓  (handles spaces)
+float("3.14")     # 3.14      ✓
+str(42)           # "42"      ✓
+bool(0)           # False     ✓
+bool("")          # False     ✓
+bool("0")         # True!     ← "0" is non-empty string!
+
+# CRASHES:
+int("3.14")       # ValueError — use int(float("3.14"))
+int("42 abc")     # ValueError — split first!
+int("10 20")      # ValueError — can't convert multi-token string
+int([1,2])        # TypeError  — can't convert list
+
+# Correct: float then int:
+int(float("3.7"))  # 3  (truncates to 3, not rounds)</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">📦</span><h3>Other essential built-ins for I/O</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">QUICK REFERENCE</div>
+        <pre>input()          # reads one line, returns string (no newline)
+print(*args)     # prints space-separated, adds newline
+len("abc")       # 3  — works on str, list, tuple, dict
+ord('a')         # 97 — char to ASCII code
+chr(97)          # 'a' — ASCII to char
+bin(10)          # '0b1010' — to binary string
+int('1010',2)    # 10 — binary string to int
+hex(255)         # '0xff' — to hex string
+int('ff', 16)    # 255 — hex to int
+
+# Useful for arrays:
+sum([1,2,3])     # 6
+min([3,1,2])     # 1
+max([3,1,2])     # 3
+sorted([3,1,2])  # [1,2,3] — returns new list
+[3,1,2].sort()   # sorts in-place, returns None!
+reversed([1,2,3])  # returns iterator, not list
+list(reversed([1,2,3]))  # [3,2,1] — need list()</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7 — EDGE CASES
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Edge Cases &amp; Traps — What Breaks Correct Solutions</h2>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🪤</span><h3>Trailing newline / whitespace in string comparison</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Fails silently with fast input</div>
+          <pre>import sys
+input = sys.stdin.readline
+
+s = input()
+if s == "YES":      # "YES\n" == "YES" → False!
+    print("correct")
+# Logic correct, but never enters if block → WA</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Always strip when comparing strings</div>
+          <pre>s = input().strip()
+if s == "YES":      # "YES" == "YES" → True ✓
+    print("correct")</pre>
+        </div>
+      </div>
+      <div class="effect">With regular input(), newline is stripped automatically. With sys.stdin.readline, it's NOT. This is one of the most common fast-input bugs.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🕳️</span><h3>Empty input / empty list</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Crashes on empty line</div>
+          <pre>arr = list(map(int, input().split()))
+print(arr[0])    # IndexError if input was empty line!
+
+print(max(arr))  # ValueError: max() arg is empty sequence</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Defensive — check before access</div>
+          <pre>arr = list(map(int, input().split()))
+if arr:
+    print(arr[0])
+    print(max(arr))
+else:
+    print(0)   # or whatever the problem specifies</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">1️⃣</span><h3>Single element edge case</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Assumes 2+ elements</div>
+          <pre>arr = list(map(int, input().split()))
+# Input: "5"  (single element)
+print(arr[1])   # IndexError: list index out of range
+
+a, b = map(int, input().split())
+# Input: "5"  (only 1 value)
+# ValueError: not enough values to unpack</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Check length first</div>
+          <pre>arr = list(map(int, input().split()))
+if len(arr) >= 2:
+    print(arr[1])
+else:
+    print(-1)  # handle single element case</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔢</span><h3>Integer overflow — Python vs other languages</h3></div>
+    <div class="concept-body">
+      <div class="info">
+        <strong>Good news:</strong> Python integers have no overflow. 10**100 works fine. However, if a problem says "answer modulo 10^9+7", you must apply it yourself or get WA from wrong value.
+      </div>
+      <div class="codeblock">
+        <div class="codeblock-head">MOD PATTERN</div>
+        <pre>MOD = 10**9 + 7
+result = (a * b) % MOD       # ✓ apply at each step
+result = a * b % MOD         # ✓ same (% has lower precedence)
+result = (a + b) % MOD       # ✓
+# Don't compute huge number then mod once at end
+# (can still be wrong if intermediate values matter)</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔡</span><h3>Case sensitivity trap</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Case mismatch → WA</div>
+          <pre>s = input()  # user types "Yes"
+if s == "YES":   # "Yes" != "YES" → False → WA
+    print("ok")</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Normalize before compare</div>
+          <pre>s = input().strip().upper()
+if s == "YES":   # always uppercase → correct</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 8 — ASSESSMENT TRAPS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Real Assessment Traps — Simulated Scenarios</h2>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎭</span><h3>Scenario A — Hidden test cases with different structure</h3></div>
+    <div class="concept-body">
+      <div class="info">You pass sample test cases but fail hidden ones. Almost always an input-parsing issue.</div>
+      <div class="codeblock">
+        <div class="codeblock-head">PROBLEM: "First line is t. Each test case: n, then n numbers."</div>
+        <pre>Sample input visible:          Hidden input:
+2                              5
+3                              1
+1 2 3                          2
+2                              3
+4 5                            4
+                               5
+                               1 2 3 4 5</pre>
+      </div>
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Wrong — assumes array on same line as n</div>
+          <pre>t = int(input())
+for _ in range(t):
+    line = input().split()
+    n = int(line[0])
+    arr = list(map(int, line[1:]))  # tries to get arr from same line!
+    # Hidden input has n alone on its line → arr is empty → WA</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Correct — n on its own line</div>
+          <pre>t = int(input())
+for _ in range(t):
+    n = int(input())        # n is alone
+    arr = list(map(int, input().split()))  # array is next line
+    print(sum(arr))</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎭</span><h3>Scenario B — You solve it, but output has wrong separator</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">PROBLEM: Sort and print. Expected: "1 2 3". Got: "1\n2\n3"</div>
+        <pre>arr = [3, 1, 2]
+
+# What you wrote (each on new line):
+for x in sorted(arr):
+    print(x)
+# Output: 1\n2\n3  → WRONG if expected "1 2 3"
+
+# Fix:
+print(*sorted(arr))
+# Output: 1 2 3 ✓
+
+# Or if expected "1,2,3":
+print(",".join(map(str, sorted(arr))))
+# Output: 1,2,3 ✓</pre>
+      </div>
+      <div class="effect"><strong>Always read output format in the problem statement.</strong> "space-separated" ≠ "one per line" ≠ "comma-separated".</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎭</span><h3>Scenario C — Debug print left in code</h3></div>
+    <div class="concept-body">
+      <div class="compare">
+        <div class="bad-block">
+          <div class="block-label">✗ Debug print ruins output</div>
+          <pre>def solve(arr):
+    print("DEBUG arr =", arr)  # ← forgot to remove!
+    return sum(arr)
+
+# Output:
+# DEBUG arr = [1, 2, 3]
+# 6
+# Judge sees 2 lines, expects 1 → WA</pre>
+        </div>
+        <div class="good-block">
+          <div class="block-label">✓ Use stderr for debug (doesn't affect stdout)</div>
+          <pre>import sys
+print("DEBUG arr =", arr, file=sys.stderr)
+# Only shows in your terminal, judge ignores stderr</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎭</span><h3>Scenario D — Consuming input out of order</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">Input: t on line 1, then each test case is: string on line 1, n on line 2, array on line 3</div>
+        <pre>WRONG CODE:                        CORRECT CODE:
+t = int(input())                   t = int(input())
+for _ in range(t):                 for _ in range(t):
+    n = int(input())  ← reads s!       s = input().strip()
+    s = input().strip()← reads n!      n = int(input())
+    arr = list(map(int,                arr = list(map(int,
+          input().split()))                   input().split()))
+# All values shifted → garbage            # Correct order ✓</pre>
+      </div>
+      <div class="effect">Read inputs in the exact order they appear. One swap cascades — every subsequent read gets wrong data.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🎭</span><h3>Scenario E — YES/NO vs Yes/No vs yes/no</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">READ THE EXPECTED OUTPUT FORMAT!</div>
+        <pre># Problem says output "YES" or "NO"
+print("Yes")   # ← WA (wrong case)
+print("yes")   # ← WA
+print("YES")   # ✓
+
+# Problem says output "True" or "False"
+print(True)    # prints "True" ✓
+print("true")  # WA (lowercase)
+
+# If in doubt, copy the exact string from problem statement</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 9 — DRY RUNS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Full Dry Runs — Step-by-Step Execution</h2>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔍</span><h3>Dry Run 1 — Multi-test case with matrix</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">INPUT</div>
+        <pre>2
+3
+1 2 3
+4 5 6
+7 8 9
+2
+10 20
+30 40</pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock-head">CODE</div>
+        <pre>t = int(input())
+for _ in range(t):
+    n = int(input())
+    mat = [list(map(int, input().split())) for _ in range(n)]
+    print(sum(mat[i][i] for i in range(n)))</pre>
+      </div>
+      <div class="dryrun">
+        <div class="dryrun-head">EXECUTION TRACE</div>
+        <table>
+          <tr><th>Line</th><th>Reads</th><th>Variable/Action</th><th>Result</th></tr>
+          <tr><td>t = int(input())</td><td>"2"</td><td>t</td><td class="ok">2</td></tr>
+          <tr><td>iter 1: n = int(input())</td><td>"3"</td><td>n</td><td class="ok">3</td></tr>
+          <tr><td>list comp row 0</td><td>"1 2 3"</td><td>mat[0]</td><td class="ok">[1,2,3]</td></tr>
+          <tr><td>list comp row 1</td><td>"4 5 6"</td><td>mat[1]</td><td class="ok">[4,5,6]</td></tr>
+          <tr><td>list comp row 2</td><td>"7 8 9"</td><td>mat[2]</td><td class="ok">[7,8,9]</td></tr>
+          <tr><td>print diagonal sum</td><td>—</td><td>1+5+9</td><td class="ok">15</td></tr>
+          <tr><td>iter 2: n = int(input())</td><td>"2"</td><td>n</td><td class="ok">2</td></tr>
+          <tr><td>list comp row 0</td><td>"10 20"</td><td>mat[0]</td><td class="ok">[10,20]</td></tr>
+          <tr><td>list comp row 1</td><td>"30 40"</td><td>mat[1]</td><td class="ok">[30,40]</td></tr>
+          <tr><td>print diagonal sum</td><td>—</td><td>10+40</td><td class="ok">50</td></tr>
+        </table>
+      </div>
+      <div class="effect">Output: 15\n50 — two numbers, one per line. Correct.</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔍</span><h3>Dry Run 2 — What happens when you read out of order</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">INPUT</div>
+        <pre>3
+1 2 3</pre>
+      </div>
+      <div class="dryrun">
+        <div class="dryrun-head">WRONG CODE — forgot t is test count, not n</div>
+        <table>
+          <tr><th>Code line</th><th>Reads</th><th>Gets</th><th>Correct?</th></tr>
+          <tr><td>n = int(input())</td><td>"3"</td><td>n = 3</td><td class="ok">ok (accidentally)</td></tr>
+          <tr><td>arr = list(map(int, input().split()))</td><td>"1 2 3"</td><td>[1,2,3]</td><td class="ok">ok</td></tr>
+          <tr><td>print(sum(arr))</td><td>—</td><td>6</td><td class="err">WA! n was actually t=3, array size unread</td></tr>
+        </table>
+      </div>
+      <div class="dryrun">
+        <div class="dryrun-head">INPUT WITH 2 TEST CASES</div>
+        <table>
+          <tr><th>Code line</th><th>Reads</th><th>Gets</th><th>Correct?</th></tr>
+          <tr><td>t = int(input())</td><td>"2"</td><td>t=2</td><td class="ok">ok</td></tr>
+          <tr><td>— no loop —</td><td>—</td><td>—</td><td class="err">only processes 1 case</td></tr>
+          <tr><td>n = int(input())</td><td>"3"</td><td>n=3</td><td class="err">reads test 1 n ✓</td></tr>
+          <tr><td>arr = list()</td><td>"1 2 3"</td><td>[1,2,3]</td><td class="err">reads test 1 data ✓</td></tr>
+          <tr><td>print</td><td>—</td><td>6</td><td class="err">test 2 never runs → WA</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head"><span class="icon">🔍</span><h3>Dry Run 3 — EOF with sys.stdin.read()</h3></div>
+    <div class="concept-body">
+      <div class="codeblock">
+        <div class="codeblock-head">INPUT (no fixed count, read until EOF)</div>
+        <pre>5 3
+10 2
+7 8</pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock-head">CODE</div>
+        <pre>import sys
+data = sys.stdin.read().split()
+# data = ['5','3','10','2','7','8']
+idx = 0
+results = []
+while idx < len(data) - 1:
+    a = int(data[idx]); b = int(data[idx+1])
+    results.append(a + b)
+    idx += 2
+print(*results)</pre>
+      </div>
+      <div class="dryrun">
+        <div class="dryrun-head">EXECUTION TRACE</div>
+        <table>
+          <tr><th>idx</th><th>a</th><th>b</th><th>a+b</th></tr>
+          <tr><td>0</td><td>5</td><td>3</td><td class="ok">8</td></tr>
+          <tr><td>2</td><td>10</td><td>2</td><td class="ok">12</td></tr>
+          <tr><td>4</td><td>7</td><td>8</td><td class="ok">15</td></tr>
+        </table>
+      </div>
+      <div class="effect">Output: 8 12 15 — all pairs summed correctly with no EOFError risk.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 10 — CHEAT SHEET
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>Final Cheat Sheet — Read Before Every Assessment</h2>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <div class="cheat-card-head">SINGLE VALUES</div>
+      <pre>n = int(input())
+a, b = map(int, input().split())
+x = float(input())</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">ARRAY INPUT</div>
+      <pre>arr = list(map(int, input().split()))
+# or:
+n = int(input())
+arr = list(map(int, input().split()))</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">MULTIPLE TEST CASES</div>
+      <pre>t = int(input())
+for _ in range(t):
+    # RESET variables here
+    n = int(input())
+    arr = list(map(int, input().split()))</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">MATRIX / 2D GRID</div>
+      <pre>n = int(input())
+mat = [list(map(int, input().split()))
+       for _ in range(n)]
+# Access: mat[row][col]</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">FAST INPUT</div>
+      <pre>import sys
+input = sys.stdin.readline
+# Use .strip() on strings!
+s = input().strip()</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">EOF INPUT</div>
+      <pre>import sys
+data = sys.stdin.read().split()
+idx = 0
+# Use data[idx], idx+=1 pattern</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">OUTPUT A LIST</div>
+      <pre>print(*arr)              # 1 2 3
+print(*arr, sep="\n")    # one per line
+print("".join(map(str,arr)))  # 123
+print(",".join(map(str,arr))) # 1,2,3</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">MIXED INPUT</div>
+      <pre>parts = input().split()
+n = int(parts[0])
+s = parts[1]        # keep as string
+# NOT: map(int, ...) on mixed!</pre>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-head">DRIVER CODE RULES</div>
+      <pre># Function returns → don't print
+def f(arr): return sum(arr)
+# Function prints → don't return
+def f(): print(sum(arr))
+# Class → never change signature</pre>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- TOP TRAPS -->
+  <h3 style="color:#fff; font-size:17px; margin-bottom:20px; margin-top:32px;">⚡ Top 15 WA Causes — Know These Cold</h3>
+  <div class="trap-grid">
+    <div class="trap-card">
+      <div class="trap-num">TRAP 01</div>
+      <h4>Missing test case loop</h4>
+      <p>Only 1 of t test cases runs. All other cases ignored → guaranteed WA.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 02</div>
+      <h4>print(arr) instead of print(*arr)</h4>
+      <p>Outputs <code>[1, 2, 3]</code> with brackets. Judge expects <code>1 2 3</code>.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 03</div>
+      <h4>No .strip() with fast input</h4>
+      <p>String comparison fails: <code>"abc\n" == "abc"</code> is False.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 04</div>
+      <h4>split(" ") instead of split()</h4>
+      <p>Two spaces → empty string token in list → index errors or wrong values.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 05</div>
+      <h4>print inside + return</h4>
+      <p>Driver also prints → answer appears twice → WA.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 06</div>
+      <h4>Not resetting variables per loop</h4>
+      <p>Values accumulate across test cases → correct for case 1, wrong for rest.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 07</div>
+      <h4>Reading input in wrong order</h4>
+      <p>One swap cascades → every subsequent read gets mismatched data.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 08</div>
+      <h4>Forgetting list() on map()</h4>
+      <p><code>map()</code> is lazy. Printing it gives <code>&lt;map object&gt;</code> or crashes on index.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 09</div>
+      <h4>String list instead of int list</h4>
+      <p>Missing <code>int()</code>: <code>"10" < "9"</code> is True → sorting, comparison, math all wrong.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 10</div>
+      <h4>Debug print left in code</h4>
+      <p>Extra output line. Strict judge fails immediately on unexpected tokens.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 11</div>
+      <h4>map(int,...) on mixed types</h4>
+      <p><code>int("hello")</code> crashes. Split manually and convert only numeric parts.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 12</div>
+      <h4>Wrong YES/NO case</h4>
+      <p>Problem says "YES", you print "Yes". Case mismatch = WA.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 13</div>
+      <h4>Changed class method signature</h4>
+      <p>Platform passes 2 args, you defined 1 → TypeError → runtime crash.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 14</div>
+      <h4>int() on float string</h4>
+      <p><code>int("3.14")</code> crashes. Use <code>int(float("3.14"))</code> instead.</p>
+    </div>
+    <div class="trap-card">
+      <div class="trap-num">TRAP 15</div>
+      <h4>Not applying modulo</h4>
+      <p>Problem says "answer mod 10^9+7". You return raw value → WA on large inputs.</p>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="spacer"></div>
+
+  <!-- LAST 5 MINUTES -->
+  <div class="last5">
+    <h3>⏱ LAST 5 MINUTES BEFORE EXAM — SCAN THIS</h3>
+    <div class="last5-item"><span class="n">01</span><span>Does problem have multiple test cases? → Wrap everything in <code>for _ in range(t)</code></span></div>
+    <div class="last5-item"><span class="n">02</span><span>Are you printing a list? → Use <code>print(*arr)</code> not <code>print(arr)</code></span></div>
+    <div class="last5-item"><span class="n">03</span><span>Using fast input (<code>sys.stdin.readline</code>)? → Add <code>.strip()</code> to all string reads</span></div>
+    <div class="last5-item"><span class="n">04</span><span>Is it a class-based problem? → Do NOT change method signature. Return, don't print.</span></div>
+    <div class="last5-item"><span class="n">05</span><span>Any debug prints? → Remove or redirect to <code>sys.stderr</code></span></div>
+    <div class="last5-item"><span class="n">06</span><span>Variables inside loop? → Make sure they reset each iteration</span></div>
+    <div class="last5-item"><span class="n">07</span><span>Check expected output format: spaces? newlines? commas? YES/NO case?</span></div>
+    <div class="last5-item"><span class="n">08</span><span>Mixed types on one line? → Don't use <code>map(int,...)</code> — split manually</span></div>
+    <div class="last5-item"><span class="n">09</span><span>WA but logic correct? → Check order: output format → test loop → input parsing → strip() → driver expectation</span></div>
+    <div class="last5-item"><span class="n">10</span><span>n ≥ 10⁵? → Switch to <code>sys.stdin.readline</code> or <code>sys.stdin.read()</code></span></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  Python I/O Mastery Playbook &nbsp;·&nbsp; Every pattern. Every trap. No fluff.
+</div>
+
+</body>
+</html>
